@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const BOARD_SIZE = 24;
+const BOARD_SIZE = 20;
 const DEFAULT_SPEED = 150;
 
 const getRandomPosition = (snake = []) => {
