@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const BOARD_SIZE = 20;
+const BOARD_SIZE = 24;
 const DEFAULT_SPEED = 150;
 
 const getRandomPosition = (snake = []) => {
@@ -121,34 +121,34 @@ const SnakeGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-300 via-pink-200 to-indigo-300 p-4 relative overflow-hidden">
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-300 via-pink-200 to-indigo-300 p-3 sm:p-6 relative overflow-hidden">
       {/* Header */}
-      <div className="z-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-6 bg-white/50 backdrop-blur-lg px-6 py-3 rounded-2xl shadow-lg border border-white/30">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-purple-800 drop-shadow-md">
+      <div className="z-10 flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-4 sm:mb-6 bg-white/50 backdrop-blur-lg px-3 sm:px-6 py-3 rounded-2xl shadow-lg border border-white/30 w-full max-w-3xl">
+        <h1 className="text-xl sm:text-3xl font-extrabold text-purple-800 drop-shadow-md text-center">
           🐍 Snake Game
         </h1>
 
         <button
           onClick={startGame}
-          className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow hover:scale-105 transition-transform duration-200"
+          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow hover:scale-105 transition-transform duration-200"
         >
           {gameRunning ? "Restart" : "Start"}
         </button>
 
         <div className="flex flex-col items-center gap-1">
-          <label className="text-purple-700 font-semibold text-sm">Speed</label>
+          <label className="text-purple-700 font-semibold text-xs sm:text-sm">Speed</label>
           <input
             type="range"
             min="50"
             max="500"
             value={speed}
             onChange={(e) => setSpeed(Number(e.target.value))}
-            className="w-28 accent-purple-600 cursor-pointer"
+            className="w-20 sm:w-32 accent-purple-600 cursor-pointer"
           />
           <span className="text-purple-900 font-medium text-xs">{speed} ms</span>
         </div>
 
-        <div className="text-lg font-bold text-purple-900 bg-purple-100 px-4 py-1 rounded-lg border border-purple-300 shadow">
+        <div className="text-sm sm:text-lg font-bold text-purple-900 bg-purple-100 px-3 py-1 rounded-lg border border-purple-300 shadow">
           Score: <span className="text-red-500">{score}</span>
         </div>
       </div>
@@ -156,7 +156,7 @@ const SnakeGame = () => {
       {/* Pause */}
       <button
         onClick={() => setPaused((prev) => !prev)}
-        className={`z-10 px-6 py-3 mb-4 text-lg font-bold text-white rounded-full shadow-lg ${
+        className={`z-10 px-5 py-2 sm:px-6 sm:py-3 mb-3 text-sm sm:text-lg font-bold text-white rounded-full shadow-lg ${
           paused
             ? "bg-gradient-to-r from-green-500 to-lime-500"
             : "bg-gradient-to-r from-red-500 to-pink-500"
@@ -169,8 +169,8 @@ const SnakeGame = () => {
       <div
         className="relative z-10 grid border-4 border-purple-700 rounded-2xl shadow-xl bg-white/40 backdrop-blur-md"
         style={{
-          gridTemplateColumns: `repeat(${BOARD_SIZE}, 20px)`,
-          gridTemplateRows: `repeat(${BOARD_SIZE}, 20px)`,
+          gridTemplateColumns: `repeat(${BOARD_SIZE}, minmax(10px, 18px))`,
+          gridTemplateRows: `repeat(${BOARD_SIZE}, minmax(10px, 18px))`,
         }}
       >
         {Array.from({ length: BOARD_SIZE * BOARD_SIZE }).map((_, index) => {
@@ -183,7 +183,7 @@ const SnakeGame = () => {
           return (
             <div
               key={index}
-              className={`w-[20px] h-[20px] border border-purple-200 ${
+              className={`w-full h-full border border-purple-200 ${
                 isFood
                   ? "bg-red-500 rounded-full"
                   : isSnake
@@ -196,49 +196,55 @@ const SnakeGame = () => {
           );
         })}
 
-        {/* Game Over (Old Style) */}
+        {/* Game Over */}
         {gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <h2 className="text-4xl font-extrabold text-red-600 drop-shadow-lg">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm rounded-2xl">
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-red-600 drop-shadow-lg">
               GAME OVER
             </h2>
+            <button
+              onClick={startGame}
+              className="mt-4 px-6 py-2 bg-red-600 text-white text-lg font-bold rounded-lg hover:bg-red-700 shadow-md"
+            >
+              Restart
+            </button>
           </div>
         )}
       </div>
 
-      {/* Joystick (Bottom Center) */}
-      <div className="mt-10 mb-6 flex justify-center items-center">
-        <div className="relative w-36 h-36 bg-gradient-to-br from-gray-200 to-gray-400 rounded-full border-4 border-gray-500 shadow-inner flex justify-center items-center">
-          <div className="absolute top-3">
+      {/* Always Visible Joystick */}
+      <div className="mt-8 flex justify-center items-center">
+        <div className="relative w-44 h-44 bg-gradient-to-br from-gray-200 to-gray-400 rounded-full border-4 border-gray-500 shadow-inner flex justify-center items-center">
+          <div className="absolute top-4">
             <button
               onClick={() => handleDirection("UP")}
-              className="bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-900 active:scale-95"
+              className="bg-gray-800 text-white p-4 rounded-full shadow-md hover:bg-gray-900 active:scale-95 touch-none"
             >
-              <FaArrowUp size={20} />
+              <FaArrowUp size={22} />
             </button>
           </div>
-          <div className="absolute bottom-3">
+          <div className="absolute bottom-4">
             <button
               onClick={() => handleDirection("DOWN")}
-              className="bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-900 active:scale-95"
+              className="bg-gray-800 text-white p-4 rounded-full shadow-md hover:bg-gray-900 active:scale-95 touch-none"
             >
-              <FaArrowDown size={20} />
+              <FaArrowDown size={22} />
             </button>
           </div>
-          <div className="absolute left-3">
+          <div className="absolute left-4">
             <button
               onClick={() => handleDirection("LEFT")}
-              className="bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-900 active:scale-95"
+              className="bg-gray-800 text-white p-4 rounded-full shadow-md hover:bg-gray-900 active:scale-95 touch-none"
             >
-              <FaArrowLeft size={20} />
+              <FaArrowLeft size={22} />
             </button>
           </div>
-          <div className="absolute right-3">
+          <div className="absolute right-4">
             <button
               onClick={() => handleDirection("RIGHT")}
-              className="bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-900 active:scale-95"
+              className="bg-gray-800 text-white p-4 rounded-full shadow-md hover:bg-gray-900 active:scale-95 touch-none"
             >
-              <FaArrowRight size={20} />
+              <FaArrowRight size={22} />
             </button>
           </div>
         </div>
